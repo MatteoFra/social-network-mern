@@ -10,6 +10,18 @@
 
 ### Auth with JWT
 
+### Users can follow others users
+
 ### Posts has "likes", comments(CRUD), picture(multer)
 
-### Add .env (w/ PORT, DB_USER)
+### Trends
+
+## Start project
+
+### backend (on port 5000) 
+
+run start
+
+### frontend (on port 3000)
+
+cd client // run start
