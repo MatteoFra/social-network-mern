@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const {checkUser, requireAuth} = require('./middleware/auth.middleware');
+const cors = require('cors');
 
 require('dotenv').config({path: './config/.env'})
 require('./config/db')
@@ -10,6 +11,17 @@ const userRoutes = require('./routes/user.routes')
 const postRoutes = require('./routes/post.routes')
 
 const app = express()
+
+// cors
+const corsOptions = {
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+  'allowedHeaders': ['sessionId', 'Content-Type'],
+  'exposedHeaders': ['sessionId'],
+  'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  'preflightContinue': false
+}
+app.use(cors(corsOptions));
 
 // middleware parser
 app.use(bodyParser.json())

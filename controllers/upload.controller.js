@@ -1,7 +1,5 @@
 const UserModel = require("../models/user.model");
 const fs = require("fs");
-const { promisify } = require("util");
-const pipeline = promisify(require("stream").pipeline);
 const { uploadErrors } = require("../utils/errors.utils");
 
 module.exports.uploadProfil = async (req, res) => {
@@ -20,24 +18,20 @@ module.exports.uploadProfil = async (req, res) => {
   }
   const fileName = req.body.userId + '.' + req.file.mimetype.split('/')[1];
 
-  // await pipeline(
-  //   req.file.stream,
-  //   fs.createWriteStream(
-  //     `${__dirname}/../client/public/uploads/profil/${fileName}`
-  //   )
-  // );
+  fs.writeFile(`${__dirname}/../client/public/uploads/profil/${fileName}`, req.file.buffer, function (err) {
+    if (err)
+      return res.status(201).json(err);
+  });
 
-  // try {
-  //   await UserModel.findByIdAndUpdate(
-  //     req.body.userId,
-  //     { $set : {picture: "./uploads/profil/" + fileName}},
-  //     { new: true, upsert: true, setDefaultsOnInsert: true},
-  //     (err, docs) => {
-  //       if (!err) return res.send(docs);
-  //       else return res.status(500).send({ message: err });
-  //     }
-  //   );
-  // } catch (err) {
-  //   return res.status(500).send({ message: err });
-  // }
+  try {
+    await UserModel.findByIdAndUpdate(
+      req.body.userId,
+      { $set: { picture: "./uploads/profil/" + fileName } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    )
+    .then((docs) => { return res.send(docs) })
+    .catch((err) => { return res.status(500).send({ message: err }) })
+  } catch (err) {
+    return res.status(500).send({ message: err });
+  }
 };

@@ -10,6 +10,6 @@
 
 ### Auth with JWT
 
-### Post has like|unlike, comments(CRUD)
+### Posts has "likes", comments(CRUD), picture(multer)
 
 ### Add .env (w/ PORT, DB_USER)
